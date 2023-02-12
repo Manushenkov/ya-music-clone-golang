@@ -1,0 +1,66 @@
+.playlist {
+    position: relative;
+    max-width: 490px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
+    min-width: 335px;
+    box-sizing: border-box;
+    padding: 29px 15px;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    &__playlist {
+        color: #777;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 13px;
+    }
+    &__name {
+        margin-top: 5px;
+        font-size: 20px;
+    }
+    &__author {
+        margin-top: 7px
+    }
+    &__cross {
+        position: absolute;
+        cursor: pointer;
+        top: 15px;
+        right: 15px;
+    }
+    &__controls {
+        display: flex;        
+        gap: 10px;
+        margin-top: 22px; 
+    }
+    &__play-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        background: #ffdb4d;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    &__play-icon {
+        width: 24px;
+        height: 24px;
+        opacity: .8;
+    }
+    &__dots-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        background: none;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    &__dots-icon {
+        opacity: .4;
+    }
+}

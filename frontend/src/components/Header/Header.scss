@@ -1,0 +1,10 @@
+.header {
+    display: flex;
+    height: 70px;
+    border-bottom: .01px solid hsla(0,0%,100%,.1);
+    &__logo {
+        transform: scale(0.86);
+        margin-top: 22px;
+        margin-left: 15px;
+    }
+}

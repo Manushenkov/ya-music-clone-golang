@@ -1,0 +1,17 @@
+.controls {
+    display: flex;
+}
+
+.controls {
+    margin-left: 40px;
+    &__navigation {
+        color: hsla(0,0%,100%,.5);
+        display: flex;
+        gap: 33px;
+        align-content: center;
+        flex-wrap: wrap;
+    }
+    &__search {
+        margin-left: 40px;
+    }
+}

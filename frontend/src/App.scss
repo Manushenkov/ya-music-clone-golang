@@ -1,0 +1,19 @@
+html {
+	background-color: #121212;
+}
+
+.app {
+	color: #f4f4f4;
+	background-color: #181818;
+	min-height: 100vh;
+	&__main {
+		width: 100%;
+		min-height: 1000px;
+		border-right: 0.01px solid hsla(0, 0%, 100%, 0.1);
+		padding: 30px 30px 60px 30px;
+	}
+	&__content {
+		display: flex;
+		height: 100%;
+	}
+}

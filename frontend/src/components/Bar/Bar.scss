@@ -1,0 +1,23 @@
+.bar {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    z-index: 101;
+    &__progress {
+        height: 12px;
+        background-color: hsla(0,0%,100%,.2);
+    }
+    &__controls {
+        height: 60px;
+        display: flex;
+        align-items: center;
+        padding-left: 12px;
+    }
+    &__btn {
+        width: 40px;
+        margin-left: 8px;
+        text-align: center;
+        fill: hsla(0,0%,100%,.2);
+
+    }
+}

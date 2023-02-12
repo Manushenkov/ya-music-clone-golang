@@ -1,0 +1,51 @@
+.user-playlists {
+	&__title {
+		font-weight: 700;
+		font-size: 20px;
+	}
+	&__cards {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 5px;
+		margin-left: -10px;
+	}
+	&__card {
+		width: 200px;
+		padding: 10px;
+		cursor: pointer;
+		img {
+			width: 200px;
+			margin-bottom: 7px;
+		}
+		&-selected {
+			border: 2px solid #ffdb4d;
+			padding: 8px;
+		}
+		&:hover {
+			border: 2px solid #ffdb4d;
+			padding: 8px;
+		}
+	}
+	&__plus-card {
+		background-color: #222;
+		margin: 10px 15px;
+		height: 200px;
+		width: 200px;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		&:hover {
+			.user-playlists__plus {
+				opacity: 0.6;
+			}
+		}
+	}
+	&__plus {
+		width: 24px;
+		height: 24px;
+		transform: scale(1.833);
+		opacity: 0.2;
+		transition: all 0.1s;
+	}
+}
