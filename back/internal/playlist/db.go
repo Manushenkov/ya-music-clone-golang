@@ -4,22 +4,23 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strconv"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgconn"
+	"github.com/jackc/pgx/v4"
 )
 
-func Create(conn *pgx.Conn, playlist *CreatePlaylistDTO) error {
-	q := `
-		INSERT INTO playlists 
-		    (playlist_name) 
-		VALUES 
-		       ($1) 
-		RETURNING playlist_id
-	`
+type PgxIface interface {
+	Begin(context.Context) (pgx.Tx, error)
+	Close(context.Context) error
+	QueryRow(ctx context.Context, sql string, args ...any) pgx.Row
+	Exec(ctx context.Context, sql string, args ...any) (pgconn.CommandTag, error)
+}
 
-	var createdTrackId int
+func Create(conn PgxIface, playlist *CreatePlaylistDTO) error {
+	q := "INSERT INTO playlists (playlist_name) VALUES ($1)"
 
-	if err := conn.QueryRow(context.Background(), q, playlist.Name).Scan(&createdTrackId); err != nil {
+	if _, err := conn.Exec(context.Background(), q, playlist.Name); err != nil {
 		fmt.Println(err)
 		return err
 	}
@@ -34,6 +35,7 @@ func Delete(conn *pgx.Conn, playlistId string) error {
 
 	if err != nil {
 		tx.Rollback(context.Background())
+		fmt.Println(err, "err 1")
 		return err
 	}
 
@@ -41,6 +43,8 @@ func Delete(conn *pgx.Conn, playlistId string) error {
 
 	if _, err := tx.Exec(context.Background(), deletePlaylistQuery, playlistId); err != nil {
 		tx.Rollback(context.Background())
+		fmt.Println(err, "err 2")
+
 		return err
 	}
 
@@ -48,17 +52,17 @@ func Delete(conn *pgx.Conn, playlistId string) error {
 		var isPresentInOtherPlaylist = 0
 		q := `SELECT 1 FROM playlist_to_track WHERE track_id = $1`
 
-		if err := conn.QueryRow(context.Background(), q, track.ID).Scan(&isPresentInOtherPlaylist); err != nil {
-			return err
-		}
+		conn.QueryRow(context.Background(), q, track.ID).Scan(&isPresentInOtherPlaylist)
 
 		if isPresentInOtherPlaylist == 0 {
-			os.Remove("./tracks/" + track.ID + ".mp3")
+			os.Remove("./tracks/" + strconv.Itoa(track.ID) + ".mp3")
 
 			deleteTrackQuery := `DELETE FROM tracks WHERE track_id = $1`
 
 			if _, err := tx.Exec(context.Background(), deleteTrackQuery, track.ID); err != nil {
 				tx.Rollback(context.Background())
+				fmt.Println(err, "err 4")
+
 				return err
 			}
 		}
@@ -105,7 +109,7 @@ func FindOne(conn *pgx.Conn, id string) (Playlist, error) {
 }
 
 type Track struct {
-	ID   string `json:"id"`
+	ID   int    `json:"id"`
 	Name string `json:"name"`
 }
 
@@ -124,7 +128,8 @@ func FindTracks(conn *pgx.Conn, playlist_id string) ([]Track, error) {
 	}
 
 	for rows.Next() {
-		var trackId, trackName string
+		var trackId int
+		var trackName string
 		err := rows.Scan(&trackId, &trackName)
 		if err != nil {
 			fmt.Println(err)
@@ -136,7 +141,7 @@ func FindTracks(conn *pgx.Conn, playlist_id string) ([]Track, error) {
 	return tracks, nil
 }
 
-func CreateTrack(conn *pgx.Conn, track *CreateTrackDTO, playlistId string) (string, error) {
+func CreateTrack(conn *pgx.Conn, track *CreateTrackDTO, playlistId string) (int, error) {
 	createTrackQuery := `
 		INSERT INTO tracks 
 		    (track_name) 
@@ -144,7 +149,7 @@ func CreateTrack(conn *pgx.Conn, track *CreateTrackDTO, playlistId string) (stri
 		       ($1) 
 		RETURNING track_id
 	`
-	var createdTrackId string
+	var createdTrackId int
 
 	tx, err := conn.BeginTx(context.Background(), pgx.TxOptions{})
 	if err != nil {

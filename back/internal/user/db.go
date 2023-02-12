@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v4"
 )
 
 type Playlist struct {
-	Id   string `json:"id"`
+	Id   int    `json:"id"`
 	Name string `json:"name"`
 }
 
@@ -26,7 +26,7 @@ func FindAllPlaylists(conn *pgx.Conn, user_id string) ([]Playlist, error) {
 	}
 
 	for rows.Next() {
-		var playlistId string
+		var playlistId int
 		var playlistName string
 		err := rows.Scan(&playlistId, &playlistName)
 		if err != nil {

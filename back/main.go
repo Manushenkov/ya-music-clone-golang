@@ -11,7 +11,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v4"
 )
 
 func main() {
@@ -36,7 +36,7 @@ func main() {
 
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{"*"},
-		AllowMethods: []string{"POST", "GET"},
+		AllowMethods: []string{"*"},
 	}))
 
 	track.Register(router, conn)
@@ -44,9 +44,8 @@ func main() {
 	user.Register(router, conn)
 
 	fmt.Println("SERVICE STARTED")
-
-	if port := os.Getenv("PORT"); port != "" {
-		router.Run("localhost:" + port)
+	if os.Getenv("PORT") != "" {
+		router.Run("localhost:8080")
 	} else {
 		router.Run("localhost:8080")
 	}

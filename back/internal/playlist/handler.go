@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v4"
 )
 
 const (
@@ -101,7 +102,7 @@ func uploadTrack(c *gin.Context, conn *pgx.Conn) {
 		return
 	}
 
-	var dst = "/Users/golubets/music-clone/back/tracks/" + trackId + ".mp3"
+	var dst = "/Users/golubets/music-clone/back/tracks/" + strconv.Itoa(trackId) + ".mp3"
 	c.SaveUploadedFile(file, dst)
 
 	c.String(http.StatusOK, fmt.Sprintf("'%s' uploaded!", file.Filename))
