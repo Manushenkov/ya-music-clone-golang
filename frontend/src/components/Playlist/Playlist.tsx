@@ -123,8 +123,9 @@ export default function Playlist({
 			</form>
 			{tracks.map((track, index) => (
 				<div key={track.id} className='track'>
-					<span>{index}</span>
-					<span>{track.name}</span>
+					<span>{index} </span>
+					<span>{track.name} </span>
+					<span>{track.id}</span>
 					<button onClick={() => playTrack(track.id)}>play</button>
 					<button onClick={() => deleteTrack(track.id)}>
 						delete
